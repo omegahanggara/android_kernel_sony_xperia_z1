@@ -20,7 +20,9 @@ function make_all() {
 function build_dt_img() {
 	echo "Builing dt.img"
 	cd $DT_BUILDER_DIR
-	rm dt.img
+	if [[ -f dt.img ]]; then
+		rm dt.img
+	fi
 	./dtbTool -o dt.img -s 2048 -p $KERN_DIR/scripts/dtc/ $KERN_DIR/arch/arm/boot/
 	cp dt.img $BOOTIMG_BUILDER_DIR
 }
@@ -28,8 +30,12 @@ function build_dt_img() {
 function build_kernel_img() {
 	echo "Builing boot.img"
 	cd $BOOTIMG_BUILDER_DIR
-	rm zImage
-	rm boot.img
+	if [[ -f zImage ]]; then
+		rm zImage		
+	fi
+	if [[ -f boot.img ]]; then
+		rm boot.img
+	fi
 	cp $KERN_DIR/arch/arm/boot/zImage $BOOTIMG_BUILDER_DIR
 	./mkbootimg --base 0x00000000 \
 	--kernel zImage \
