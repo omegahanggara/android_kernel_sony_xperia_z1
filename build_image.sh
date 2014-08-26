@@ -49,5 +49,11 @@ function build_kernel_img() {
 }
 
 make_all
-build_dt_img
-build_kernel_img
+if [[ -f $KERN_DIR/arch/arm/boot/zImage ]]; then
+	build_dt_img
+	build_kernel_img
+else
+	echo "Something wrong when compiling, check the log for more info"
+	sleep 2
+	exit 1
+fi
