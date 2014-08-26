@@ -1,42 +1,33 @@
 #!/bin/env bash
-export CROSS_COMPILE=/root/Android/Compiler/android_prebuilt_toolchains/arm-eabi-linaro-4.6.2/bin/arm-eabi-
-export ARCH=arm
 export KERN_DIR=/root/Android/KernelSource/android_kernel_sony_xperia_z1
 export DT_BUILDER_DIR=/root/Android/Compiler/dt_tools
 export BOOTIMG_BUILDER_DIR=/root/Android/Compiler/bootimg_tools
 
-function make_all() {
-	echo "Cleaning up..."
-	sleep 3
-	make distclean
-	echo "Importing supermassive_blackhole_defconfig..."
-	sleep 2
-	make supermassive_blackhole_defconfig
-	echo "Builing........"
-	sleep 3
-	make -j5
-}
-
 function build_dt_img() {
-	echo "Builing dt.img"
 	cd $DT_BUILDER_DIR
 	if [[ -f dt.img ]]; then
 		rm dt.img
+		echo "Removing previous dt.img..."
 	fi
+	echo "Builing dt.img"
 	./dtbTool -o dt.img -s 2048 -p $KERN_DIR/scripts/dtc/ $KERN_DIR/arch/arm/boot/
+	echo "Copying dt.img"
 	cp dt.img $BOOTIMG_BUILDER_DIR
 }
 
 function build_kernel_img() {
-	echo "Builing boot.img"
 	cd $BOOTIMG_BUILDER_DIR
 	if [[ -f zImage ]]; then
+		echo "Removing previous zImage..."
 		rm zImage		
 	fi
 	if [[ -f boot.img ]]; then
+		echo "Removing previous boot.img..."
 		rm boot.img
 	fi
+	echo "Copying zImage..."
 	cp $KERN_DIR/arch/arm/boot/zImage $BOOTIMG_BUILDER_DIR
+	echo "Builing boot.img"
 	./mkbootimg --base 0x00000000 \
 	--kernel zImage \
 	--ramdisk_offset 0x02000000 \
@@ -48,12 +39,15 @@ function build_kernel_img() {
 	-o boot.img
 }
 
-make_all
 if [[ -f $KERN_DIR/arch/arm/boot/zImage ]]; then
 	build_dt_img
 	build_kernel_img
+	if [[ -f $BOOTIMG_BUILDER_DIR/boot.img ]]; then
+		echo "boot.img successfuly built"
+		exit 0
+	fi
 else
-	echo "Something wrong when compiling, check the log for more info"
+	echo "zImage is not found!!!"
 	sleep 2
 	exit 1
 fi
