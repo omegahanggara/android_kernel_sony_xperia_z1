@@ -92,6 +92,7 @@
 				qcom,io-fraction = <100>;
 			};
 		};
+	};
 
 &gdsc_venus {
 	qcom,skip-logic-collapse;
