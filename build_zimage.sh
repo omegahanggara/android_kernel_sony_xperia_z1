@@ -8,14 +8,32 @@ function exportall() {
 function distclean() {
 	exportall
 	echo "Cleaning..."
-	make distclean
+	make CT_ARCH_ARCH="" \
+	CT_ARCH_CPU="cortex-a15" \
+	CT_ARCH_TUNE="cortex-a15" \
+	CT_ARCH_FPU="neon-vfpv4" \
+	CT_ARCH_FLOAT_HW=y \
+	CT_ARCH_FLOAT="hard" \
+	CT_ARCH_SUPPORT_SOFTFP=y \
+	CT_ARCH_ARM_MODE="arm" \
+	CT_ARCH_ARM_MODE_ARM=y \
+	distclean
 	echo "Done"
 }
 
 function import() {
 	exportall
 	echo "Importing SuperMassive BlackHole defconfig"
-	make supermassive_blackhole_defconfig
+	make CT_ARCH_ARCH="" \
+	CT_ARCH_CPU="cortex-a15" \
+	CT_ARCH_TUNE="cortex-a15" \
+	CT_ARCH_FPU="neon-vfpv4" \
+	CT_ARCH_FLOAT_HW=y \
+	CT_ARCH_FLOAT="hard" \
+	CT_ARCH_SUPPORT_SOFTFP=y \
+	CT_ARCH_ARM_MODE="arm" \
+	CT_ARCH_ARM_MODE_ARM=y \
+	supermassive_blackhole_defconfig
 	echo "Done"
 }
 
