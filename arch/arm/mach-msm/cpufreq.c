@@ -538,7 +538,7 @@ out:
 
 struct freq_attr msm_cpufreq_attr_max_screen_off_khz = {
 	.attr = { .name = "screen_off_max_freq",
-		.mode = 0666,
+		.mode = 0644,
 	},
 	.show = show_max_screen_off_khz,
 	.store = store_max_screen_off_khz,
